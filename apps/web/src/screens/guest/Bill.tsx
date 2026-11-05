@@ -10,10 +10,12 @@ import { useGuest } from '../../context/guest';
 import { amountLeft, lineTotal } from '../../lib/billing';
 import { formatCents } from '../../lib/money';
 import { guestPath } from '../../lib/paths';
+import { GuestPaid } from './GuestPaid';
 
-/** 1 · Bill (Main.dc.html) */
+/** 1 · Bill (Main.dc.html), or 7 · GuestPaid once nothing is left to pay. */
 export function Bill() {
   const { bill, tableToken } = useGuest();
+  if (amountLeft(bill) === 0) return <GuestPaid />;
 
   return (
     <PhoneScreen>

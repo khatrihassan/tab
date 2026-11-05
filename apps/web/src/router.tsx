@@ -5,6 +5,7 @@ import { Bill } from './screens/guest/Bill';
 import { Choose } from './screens/guest/Choose';
 import { Items } from './screens/guest/Items';
 import { SplitEqual } from './screens/guest/SplitEqual';
+import { Tip } from './screens/guest/Tip';
 
 export const router = createBrowserRouter([
   { path: '/', element: <Navigate to="/t/demo" replace /> },
@@ -16,6 +17,7 @@ export const router = createBrowserRouter([
       { path: 'choose', element: <Choose /> },
       { path: 'split', element: <SplitEqual /> },
       { path: 'items', element: <Items /> },
+      { path: 'tip', element: <Tip /> },
     ],
   },
   { path: '/dev/components', element: <DevComponents /> },

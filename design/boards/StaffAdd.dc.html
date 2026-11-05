@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Add items to the bill</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111111}a:hover{color:#3D3D3A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F5F4F0; color: #111111; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 12px">
+    <a href="StaffTable.dc.html" aria-label="Back to Table 7" style="width: 44px; height: 44px; margin-left: -10px; display: flex; align-items: center; justify-content: center; border-radius: 10px">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg>
+    </a>
+    <div style="width: 64px; height: 25px; overflow: hidden" aria-label="tab." role="img">
+      <img src="/_blob/c01bdf59c4e277fa907d4dd945951896" alt="" style="width: 92px; height: auto; margin: -9px 0 0 -13px; display: block; mix-blend-mode: multiply">
+    </div>
+    <span style="font-family: 'Space Mono', monospace; font-size: 13px; padding: 6px 10px; border: 1.5px solid #111111; border-radius: 6px">TABLE 07</span>
+  </header>
+
+  <div style="flex: 1 1 auto; overflow-y: auto; padding: 8px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+    <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">Add items</h1>
+
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <label for="menu-search" style="font-size: 13px; font-weight: 600">Search the menu</label>
+      <input id="menu-search" type="search" placeholder="Burger, drinks…" style="height: 48px; padding: 0 14px; border-radius: 12px; border: 1.5px solid #111111; background: #FFFFFF; color: #111111; font-size: 16px; font-family: Inter, system-ui, sans-serif; box-sizing: border-box">
+    </div>
+
+    <div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="Menu section">
+      <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+        <button type="button" onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #111111; background: {{c.bg}}; color: {{c.fg}}; font-size: 14px; font-weight: 600; font-family: Inter, system-ui, sans-serif; cursor: pointer">{{c.label}}</button>
+      </sc-for>
+    </div>
+
+    <section style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 16px; padding: 0 14px" aria-label="Menu items">
+      <sc-for list="{{items}}" as="m" hint-placeholder-count="6">
+        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #EEEDE8">
+          <span style="flex: 1 1 auto; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 15px; font-weight: 500">{{m.name}}</span>
+            <span style="font-size: 12px; color: #5C5C58">{{m.cat}} · <span style="font-family: 'Space Mono', monospace">{{m.price}}</span></span>
+          </span>
+          <sc-if value="{{m.none}}" hint-placeholder-val="{{ true }}">
+            <button type="button" onClick="{{m.inc}}" aria-label="{{m.addLabel}}" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #111111; background: #FFFFFF; color: #111111; font-size: 14px; font-weight: 600; font-family: Inter, system-ui, sans-serif; cursor: pointer">Add</button>
+          </sc-if>
+          <sc-if value="{{m.has}}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; align-items: center; gap: 6px">
+              <button type="button" onClick="{{m.dec}}" aria-label="{{m.decLabel}}" style="width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid #111111; background: #FFFFFF; color: #111111; font-family: 'Space Mono', monospace; font-size: 18px; cursor: pointer">−</button>
+              <span style="min-width: 32px; height: 44px; border-radius: 10px; border: 1.5px solid #111111; background: {{accent}}; display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 15px; font-weight: 700">{{m.qty}}</span>
+              <button type="button" onClick="{{m.inc}}" aria-label="{{m.incLabel}}" style="width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid #111111; background: #FFFFFF; color: #111111; font-family: 'Space Mono', monospace; font-size: 18px; cursor: pointer">+</button>
+            </div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </section>
+
+    <div style="display: flex; gap: 8px; align-items: center; font-size: 12px; color: #5C5C58">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5C5C58" stroke-width="2" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"></path></svg>
+      <span>Guests who are paying will see "Bill updated".</span>
+    </div>
+  </div>
+
+  <div style="padding: 12px 20px 28px; border-top: 1px solid #E2E0DA; display: flex; flex-direction: column; gap: 10px">
+    <div style="display: flex; justify-content: space-between; font-size: 13px; color: #5C5C58"><span>{{countLabel}} · before tax</span><span style="font-family: 'Space Mono', monospace; color: #111111; font-weight: 700">{{sub}}</span></div>
+    <a href="StaffTable.dc.html" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 14px; background: #111111; color: #FFFFFF; text-decoration: none; font-size: 17px; font-weight: 600">Add to Table 07</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F031","options":["#C8F031","#FFD23F","#9AD4FF","#FFB8A8"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { cat: 'All', qty: { dessert: 1 } }; }
+  renderVals() {
+    const s = this.state;
+    const accent = this.props.accent ?? '#C8F031';
+    const fmt = (c) => '$' + (c / 100).toFixed(2);
+    const menu = [
+      { id: 'burger', name: 'Burger', cat: 'Mains', price: 1800 },
+      { id: 'pasta', name: 'Pasta', cat: 'Mains', price: 2200 },
+      { id: 'salad', name: 'Salad', cat: 'Mains', price: 1400 },
+      { id: 'nachos', name: 'Nachos', cat: 'Shared', price: 1600 },
+      { id: 'drink', name: 'House drink', cat: 'Drinks', price: 500 },
+      { id: 'dessert', name: 'Dessert', cat: 'Desserts', price: 900 }
+    ];
+    const setQty = (id, n) => this.setState({ qty: Object.assign({}, s.qty, { [id]: Math.max(0, Math.min(20, n)) }) });
+    const cats = ['All', 'Mains', 'Shared', 'Drinks', 'Desserts'].map((c) => ({
+      label: c,
+      on: s.cat === c,
+      bg: s.cat === c ? '#111111' : '#FFFFFF',
+      fg: s.cat === c ? '#FFFFFF' : '#111111',
+      pick: () => this.setState({ cat: c })
+    }));
+    const items = menu.filter((m) => s.cat === 'All' || m.cat === s.cat).map((m) => {
+      const q = s.qty[m.id] || 0;
+      return {
+        name: m.name, cat: m.cat, price: fmt(m.price), qty: q,
+        has: q > 0, none: q === 0,
+        addLabel: 'Add ' + m.name, incLabel: 'One more ' + m.name, decLabel: 'One fewer ' + m.name,
+        inc: () => setQty(m.id, q + 1),
+        dec: () => setQty(m.id, q - 1)
+      };
+    });
+    let count = 0, sub = 0;
+    menu.forEach((m) => { const q = s.qty[m.id] || 0; count += q; sub += q * m.price; });
+    return {
+      accent: accent, cats: cats, items: items,
+      countLabel: count + (count === 1 ? ' new item' : ' new items'),
+      sub: fmt(sub)
+    };
+  }
+}
+</script>
+</body>
+</html>

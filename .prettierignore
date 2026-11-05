@@ -5,3 +5,6 @@ package-lock.json
 
 # Claude Design exports: keep byte-for-byte as exported
 design
+
+# Kept exactly as written
+CLAUDE.md

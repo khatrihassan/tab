@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Payment confirmed</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Mono:wght@400;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#111111}a:hover{color:#3D3D3A}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F5F4F0; color: #111111; font-family: Inter, system-ui, sans-serif; display: flex; flex-direction: column">
+  <header style="display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 12px">
+    <div style="width: 64px; height: 25px; overflow: hidden" aria-label="tab." role="img">
+      <img src="/_blob/c01bdf59c4e277fa907d4dd945951896" alt="" style="width: 92px; height: auto; margin: -9px 0 0 -13px; display: block; mix-blend-mode: multiply">
+    </div>
+    <span style="font-family: 'Space Mono', monospace; font-size: 13px; padding: 6px 10px; border: 1.5px solid #111111; border-radius: 6px">TABLE 07</span>
+  </header>
+
+  <div style="flex: 1 1 auto; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px">
+      <span style="width: 56px; height: 56px; border-radius: 14px; background: {{accent}}; border: 1.5px solid #111111; display: flex; align-items: center; justify-content: center">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#111111" stroke-width="3" stroke-linecap="square" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+      </span>
+      <h1 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.02em">You're all set</h1>
+      <p style="margin: 0; font-size: 14px; color: #5C5C58">Paid <span style="font-family: 'Space Mono', monospace; color: #111111">$40.61</span>. Your server has been told. You're free to go.</p>
+    </div>
+
+    <section style="background: #FFFFFF; border: 1px solid #E2E0DA; border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 8px; font-size: 14px" aria-label="Receipt">
+      <div style="display: flex; justify-content: space-between; font-family: 'Space Mono', monospace; font-size: 12px; color: #5C5C58; padding-bottom: 6px; border-bottom: 1.5px dashed #111111"><span>RECEIPT</span><span>[DATE · TIME]</span></div>
+      <div style="display: flex; justify-content: space-between"><span>Burger</span><span style="font-family: 'Space Mono', monospace">$18.00</span></div>
+      <div style="display: flex; justify-content: space-between"><span>House drink ×1</span><span style="font-family: 'Space Mono', monospace">$5.00</span></div>
+      <div style="display: flex; justify-content: space-between"><span>½ Nachos</span><span style="font-family: 'Space Mono', monospace">$8.00</span></div>
+      <div style="display: flex; justify-content: space-between; color: #5C5C58; padding-top: 6px; border-top: 1px solid #EEEDE8"><span>Subtotal</span><span style="font-family: 'Space Mono', monospace">$31.00</span></div>
+      <div style="display: flex; justify-content: space-between; color: #5C5C58"><span>HST 13%</span><span style="font-family: 'Space Mono', monospace">$4.03</span></div>
+      <div style="display: flex; justify-content: space-between; color: #5C5C58"><span>Tip 18%</span><span style="font-family: 'Space Mono', monospace">$5.58</span></div>
+      <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; padding-top: 8px; border-top: 1.5px dashed #111111"><span>Paid · Apple Pay</span><span style="font-family: 'Space Mono', monospace">$40.61</span></div>
+    </section>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 12px; background: #ECEAE4; font-size: 13px; color: #3D3D3A">
+      <span>Still to pay at Table 7</span><span style="font-family: 'Space Mono', monospace; color: #111111">$61.02</span>
+    </div>
+
+    <section style="display: flex; flex-direction: column; gap: 10px" aria-label="Rate your service">
+      <span style="font-size: 15px; font-weight: 600">How was your service? <span style="font-weight: 400; color: #5C5C58">(optional)</span></span>
+      <div style="display: flex; gap: 8px" role="group" aria-label="Rating, 1 to 5 stars">
+        <sc-for list="{{stars}}" as="s" hint-placeholder-count="5">
+          <button type="button" onClick="{{s.pick}}" aria-label="{{s.aria}}" aria-pressed="{{s.on}}" style="width: 56px; height: 56px; border-radius: 12px; border: 1.5px solid #111111; background: {{s.bg}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="{{s.fill}}" stroke="#111111" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 16.8 6.6 19.7l1.1-6.1L3.2 9.4l6.1-.8z"></path></svg>
+          </button>
+        </sc-for>
+      </div>
+      <sc-if value="{{rated}}" hint-placeholder-val="{{ false }}">
+        <div style="display: flex; flex-direction: column; gap: 10px">
+          <span style="font-size: 14px; font-weight: 600">{{reasonPrompt}}</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px" role="group" aria-label="{{reasonPrompt}}">
+            <sc-for list="{{reasons}}" as="q" hint-placeholder-count="4">
+              <button type="button" onClick="{{q.pick}}" aria-pressed="{{q.on}}" style="height: 44px; padding: 0 14px; border-radius: 10px; border: 1.5px solid #111111; background: {{q.bg}}; color: #111111; font-size: 14px; font-weight: 500; font-family: Inter, system-ui, sans-serif; cursor: pointer">{{q.label}}</button>
+            </sc-for>
+          </div>
+          <span style="font-size: 13px; color: #3D3D3A">Thanks, we've passed that on.</span>
+        </div>
+      </sc-if>
+    </section>
+  </div>
+
+  <div style="padding: 14px 20px 28px; border-top: 1px solid #E2E0DA">
+    <a href="#" style="display: flex; align-items: center; justify-content: center; height: 56px; border-radius: 14px; border: 1.5px solid #111111; color: #111111; text-decoration: none; font-size: 16px; font-weight: 600">Email me this receipt</a>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8F031","options":["#C8F031","#FFD23F","#9AD4FF","#FFB8A8"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { rating: 0, picked: {} }; }
+  renderVals() {
+    const accent = this.props.accent ?? '#C8F031';
+    const r = this.state.rating;
+    const picked = this.state.picked;
+    const stars = [1, 2, 3, 4, 5].map((n) => ({
+      on: n <= r,
+      aria: n + (n === 1 ? ' star' : ' stars'),
+      bg: n <= r ? accent : '#FFFFFF',
+      fill: n <= r ? '#111111' : 'none',
+      pick: () => this.setState({ rating: r === n ? 0 : n, picked: {} })
+    }));
+    const good = r >= 4;
+    const labels = good ? ['Friendly', 'Attentive', 'Quick', 'Knew the menu'] : ['Slow', 'Hard to flag down', 'Order mix-up', 'Not friendly'];
+    const reasons = labels.map((l) => ({
+      label: l,
+      on: !!picked[l],
+      bg: picked[l] ? accent : '#FFFFFF',
+      pick: () => this.setState({ picked: Object.assign({}, picked, { [l]: !picked[l] }) })
+    }));
+    return {
+      accent: accent, stars: stars, rated: r > 0,
+      reasonPrompt: good ? 'What stood out?' : 'What could be better?',
+      reasons: reasons
+    };
+  }
+}
+</script>
+</body>
+</html>

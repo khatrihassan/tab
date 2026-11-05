@@ -4,6 +4,7 @@ import { DevComponents } from './screens/DevComponents';
 import { Bill } from './screens/guest/Bill';
 import { Choose } from './screens/guest/Choose';
 import { Items } from './screens/guest/Items';
+import { Pay } from './screens/guest/Pay';
 import { SplitEqual } from './screens/guest/SplitEqual';
 import { Tip } from './screens/guest/Tip';
 
@@ -18,6 +19,7 @@ export const router = createBrowserRouter([
       { path: 'split', element: <SplitEqual /> },
       { path: 'items', element: <Items /> },
       { path: 'tip', element: <Tip /> },
+      { path: 'pay', element: <Pay /> },
     ],
   },
   { path: '/dev/components', element: <DevComponents /> },

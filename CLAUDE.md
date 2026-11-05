@@ -30,7 +30,7 @@ QR pay-at-table web app for restaurants in London, Ontario. Guests scan a QR cod
 ## Data
 
 - Until the API is live, all data comes from apps/web/src/lib/api.ts, which returns mock data from apps/web/src/mocks/ after a short delay.
-- Functions: getBill(tableToken), lockItems(billId, itemIds), pay(billId, payload).
+- Functions: getBill(tableToken), lockItems(billId, lines: PaymentLine[]), pay(billId, payload).
 - VITE_USE_MOCKS=true keeps the demo working when the API is down.
 
 ## Routes

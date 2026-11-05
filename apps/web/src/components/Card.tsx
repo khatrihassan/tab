@@ -1,10 +1,15 @@
 import type { HTMLAttributes } from 'react';
 
-/** White card with a line border (bill card in Main.dc.html). */
-export function Card({ className = '', ...rest }: HTMLAttributes<HTMLElement>) {
+type CardProps = HTMLAttributes<HTMLElement> & {
+  /** Padding classes. Defaults to the bill card's 4px 16px (Main.dc.html). */
+  pad?: string;
+};
+
+/** White card with a line border. */
+export function Card({ className = '', pad = 'px-4 py-1', ...rest }: CardProps) {
   return (
     <section
-      className={`rounded-card border border-line bg-surface px-4 py-1 ${className}`.trim()}
+      className={`rounded-card border border-line bg-surface ${pad} ${className}`.trim()}
       {...rest}
     />
   );

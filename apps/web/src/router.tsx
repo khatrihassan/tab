@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router';
+import { DevComponents } from './screens/DevComponents';
 
 // Placeholder route — real screens come later.
 export const router = createBrowserRouter([
@@ -9,5 +10,9 @@ export const router = createBrowserRouter([
         <h1 className="text-4xl font-bold">Tab.</h1>
       </main>
     ),
+  },
+  {
+    path: '/dev/components',
+    element: <DevComponents />,
   },
 ]);

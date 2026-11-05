@@ -21,7 +21,7 @@ type CommonProps = {
   trailing?: ReactNode;
 };
 
-type LinkButtonProps = CommonProps & { to: string };
+type LinkButtonProps = CommonProps & { to: string; onClick?: () => void };
 type NativeButtonProps = CommonProps &
   Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'children'> & { to?: undefined };
 
@@ -48,7 +48,7 @@ export function Button({
 
   if (props.to !== undefined) {
     return (
-      <Link to={props.to} className={classes}>
+      <Link to={props.to} onClick={props.onClick} className={classes}>
         {content}
       </Link>
     );

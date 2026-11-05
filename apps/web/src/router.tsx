@@ -3,6 +3,7 @@ import { GuestLayout } from './context/GuestProvider';
 import { DevComponents } from './screens/DevComponents';
 import { Bill } from './screens/guest/Bill';
 import { Choose } from './screens/guest/Choose';
+import { Done } from './screens/guest/Done';
 import { Items } from './screens/guest/Items';
 import { Pay } from './screens/guest/Pay';
 import { SplitEqual } from './screens/guest/SplitEqual';
@@ -20,6 +21,7 @@ export const router = createBrowserRouter([
       { path: 'items', element: <Items /> },
       { path: 'tip', element: <Tip /> },
       { path: 'pay', element: <Pay /> },
+      { path: 'done', element: <Done /> },
     ],
   },
   { path: '/dev/components', element: <DevComponents /> },

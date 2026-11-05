@@ -1,1 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap');
 @import 'tailwindcss';
+
+@theme {
+  --color-bg: #f5f4f0;
+  --color-surface: #ffffff;
+  --color-ink: #111111;
+  --color-muted: #5c5c58;
+  --color-line: #e2e0da;
+  --color-divider: #eeede8;
+  --color-accent: #c8f031;
+
+  --font-sans: Inter, system-ui, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+
+  --radius-card: 16px;
+  --radius-button: 14px;
+}
+
+@layer base {
+  body {
+    margin: 0;
+    background-color: var(--color-bg);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+  }
+}

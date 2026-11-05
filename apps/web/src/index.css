@@ -10,6 +10,13 @@
   --color-divider: #eeede8;
   --color-accent: #c8f031;
 
+  /* Secondary greys used across the guest boards. */
+  --color-ink-soft: #3d3d3a; /* body copy, reasons, ring track */
+  --color-well: #eceae4; /* lock notice, taken-item tile, still-to-pay strip */
+  --color-on-ink-muted: #cfcfcb; /* muted text on ink panels */
+  --color-field: #8a8983; /* card form input borders */
+  --color-rule: #d6d4cd; /* "or pay by card" rule */
+
   --font-sans: Inter, system-ui, sans-serif;
   --font-mono: 'Space Mono', monospace;
 

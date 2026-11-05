@@ -1,14 +1,16 @@
 import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import { Link } from 'react-router';
 
-type Variant = 'primary' | 'secondary' | 'accent';
+type Variant = 'primary' | 'secondary' | 'outline' | 'accent';
 
 const base =
-  'flex h-14 w-full items-center rounded-button font-semibold no-underline disabled:cursor-not-allowed disabled:opacity-40';
+  'flex h-14 w-full items-center rounded-button no-underline disabled:cursor-not-allowed disabled:opacity-40';
 
 const variants: Record<Variant, string> = {
-  primary: 'bg-ink text-[17px] text-surface',
-  secondary: 'border-[1.5px] border-ink bg-transparent text-[16px] text-ink',
+  primary: 'bg-ink text-[17px] font-semibold text-surface',
+  secondary: 'border-[1.5px] border-ink bg-transparent text-[16px] font-semibold text-ink',
+  // "Google Pay" in Pay.dc.html.
+  outline: 'border-[1.5px] border-ink bg-surface text-[17px] font-semibold text-ink',
   // "Pay by card" in Pay.dc.html.
   accent: 'border-[1.5px] border-ink bg-accent text-[17px] font-bold text-ink',
 };

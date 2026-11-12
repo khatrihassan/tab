@@ -1,7 +1,7 @@
-import type { ItemLock, Payment, PaymentLine } from '@tab/shared';
+import type { Bill, ItemLock, Payment, PaymentLine } from '@tab/shared';
 import { mockBills } from '../mocks/bills';
 import { amountLeft, fractionCents, lineTotal, quoteItems, splitAmounts } from './billing';
-import type { GuestBill, PayPayload } from './types';
+import type { PayPayload } from './types';
 
 /**
  * Data access for the guest flow. Until the API is live this serves mock data
@@ -14,7 +14,7 @@ const PAY_DELAY_MS = 1000;
 
 const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const store: Record<string, GuestBill> = structuredClone(mockBills);
+const store: Record<string, Bill> = structuredClone(mockBills);
 
 const findById = (billId: string) => {
   const bill = Object.values(store).find((b) => b.id === billId);
@@ -22,7 +22,7 @@ const findById = (billId: string) => {
   return bill;
 };
 
-export async function getBill(tableToken: string): Promise<GuestBill> {
+export async function getBill(tableToken: string): Promise<Bill> {
   await wait(LOAD_DELAY_MS);
   const bill = store[tableToken];
   if (!bill) throw new Error(`No bill for table ${tableToken}`);

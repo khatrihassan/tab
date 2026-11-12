@@ -1,3 +1,4 @@
+import type { Item } from '@tab/shared';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { BottomBar } from '../../components/BottomBar';
@@ -18,7 +19,7 @@ import {
 } from '../../lib/billing';
 import { formatCents } from '../../lib/money';
 import { guestPath } from '../../lib/paths';
-import type { Fraction, GuestItem } from '../../lib/types';
+import type { Fraction } from '../../lib/types';
 
 const ROW = 'border-b border-divider py-3 last:border-b-0';
 const TILE =
@@ -102,7 +103,7 @@ export function Items() {
 }
 
 /** Paid for, or held by another guest. */
-function TakenRow({ item }: { item: GuestItem }) {
+function TakenRow({ item }: { item: Item }) {
   return (
     <div className={`flex items-center gap-3 ${ROW}`}>
       <span className="flex size-11 shrink-0 items-center justify-center rounded-[10px] bg-well">
@@ -130,7 +131,7 @@ function FractionRow({
   fraction,
   onChange,
 }: {
-  item: GuestItem;
+  item: Item;
   fraction: Fraction | undefined;
   onChange: (f: Fraction | null) => void;
 }) {
@@ -179,7 +180,7 @@ function QuantityRow({
   count,
   onChange,
 }: {
-  item: GuestItem;
+  item: Item;
   count: number;
   onChange: (count: number) => void;
 }) {

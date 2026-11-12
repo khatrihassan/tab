@@ -1,5 +1,5 @@
-import type { PaymentLine, SplitShare } from '@tab/shared';
-import type { Fraction, GuestBill, GuestItem } from './types';
+import type { Bill, Item, PaymentLine, SplitShare } from '@tab/shared';
+import type { Fraction } from './types';
 
 /**
  * Client-side estimates in integer cents. The server does the real rounding
@@ -9,17 +9,17 @@ import type { Fraction, GuestBill, GuestItem } from './types';
 /** Ontario HST, shown as "HST 13%". */
 export const HST_RATE = 0.13;
 
-export const lineTotal = (item: GuestItem) => item.unitPrice * item.quantity;
+export const lineTotal = (item: Item) => item.unitPrice * item.quantity;
 
-export const isItemPaid = (item: GuestItem) => item.paidAmount >= lineTotal(item);
+export const isItemPaid = (item: Item) => item.paidAmount >= lineTotal(item);
 
 /** Cents for a fraction of an item's line total, e.g. 1/2 of $16.00 = 800. */
-export const fractionCents = (item: GuestItem, f: Fraction) =>
+export const fractionCents = (item: Item, f: Fraction) =>
   Math.round((lineTotal(item) * f.numerator) / f.denominator);
 
 export const taxOn = (cents: number) => Math.round(cents * HST_RATE);
 
-export const amountLeft = (bill: GuestBill) => Math.max(0, bill.total - bill.amountPaid);
+export const amountLeft = (bill: Bill) => Math.max(0, bill.total - bill.amountPaid);
 
 /** What one payment covers before the tip. */
 export type Quote = {
@@ -31,7 +31,7 @@ export type Quote = {
 } & ({ lines: PaymentLine[]; splitShare?: never } | { splitShare: SplitShare; lines?: never });
 
 /** Paying for picked item fractions: HST on the sum, as in Items.dc.html. */
-export function quoteItems(bill: GuestBill, fractions: Record<string, Fraction>): Quote {
+export function quoteItems(bill: Bill, fractions: Record<string, Fraction>): Quote {
   const lines: PaymentLine[] = [];
   let preTax = 0;
   for (const item of bill.items) {
@@ -45,7 +45,7 @@ export function quoteItems(bill: GuestBill, fractions: Record<string, Fraction>)
 }
 
 /** Paying for everything still unpaid: the remaining fraction of each line. */
-export function quoteWhole(bill: GuestBill): Quote {
+export function quoteWhole(bill: Bill): Quote {
   const fractions: Record<string, Fraction> = {};
   for (const item of bill.items) {
     const left = lineTotal(item) - item.paidAmount;
@@ -61,7 +61,7 @@ export function splitAmounts(total: number, people: number) {
 }
 
 /** One share of an equal split. Tax is the share's proportional slice of the bill's tax. */
-export function quoteSplit(bill: GuestBill, people: number): Quote {
+export function quoteSplit(bill: Bill, people: number): Quote {
   const amount = Math.min(splitAmounts(bill.total, people).share, amountLeft(bill));
   const preTax = Math.round((amount * bill.subtotal) / bill.total);
   return { preTax, tax: amount - preTax, amount, splitShare: { shares: 1, of: people } };

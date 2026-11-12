@@ -1,4 +1,4 @@
-import type { GuestBill, GuestItem } from '../lib/types';
+import type { Bill, Item } from '@tab/shared';
 
 /**
  * Mock bills, keyed by table token. All money is integer cents.
@@ -7,7 +7,7 @@ import type { GuestBill, GuestItem } from '../lib/types';
 
 const RESTAURANT = 'Harbour & Elm';
 
-const table7Items = (): GuestItem[] => [
+const table7Items = (): Item[] => [
   {
     id: 'item-burger',
     menuItemId: 'menu-burger',
@@ -64,7 +64,7 @@ const table7 = {
 };
 
 /** Nothing paid yet. */
-const demo: GuestBill = {
+const demo: Bill = {
   ...table7,
   id: 'bill-demo',
   status: 'open',
@@ -75,20 +75,22 @@ const demo: GuestBill = {
 };
 
 /** Jordan has paid for the Pasta: $22.00 + $2.86 HST. */
-const demoPartial: GuestBill = {
+const demoPartial: Bill = {
   ...table7,
   id: 'bill-demo-partial',
   status: 'open',
   splitMode: 'items',
   splitShares: null,
   items: table7Items().map((item) =>
-    item.id === 'item-pasta' ? { ...item, paidAmount: 2200, takenBy: 'Jordan' } : item,
+    item.id === 'item-pasta'
+      ? { ...item, paidAmount: 2200, takenBy: 'Jordan', isMine: false }
+      : item,
   ),
   amountPaid: 2486,
 };
 
 /** Every item paid; scanning shows "This bill is fully paid". */
-const demoPaid: GuestBill = {
+const demoPaid: Bill = {
   ...table7,
   id: 'bill-demo-paid',
   status: 'paid',
@@ -98,7 +100,7 @@ const demoPaid: GuestBill = {
   amountPaid: 9605,
 };
 
-export const mockBills: Record<string, GuestBill> = {
+export const mockBills: Record<string, Bill> = {
   demo,
   'demo-partial': demoPartial,
   'demo-paid': demoPaid,

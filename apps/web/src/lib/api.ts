@@ -1,4 +1,4 @@
-import type { Payment, PaymentLine } from '@tab/shared';
+import type { ItemLock, Payment, PaymentLine } from '@tab/shared';
 import { mockBills } from '../mocks/bills';
 import { amountLeft, fractionCents, lineTotal, quoteItems, splitAmounts } from './billing';
 import type { GuestBill, PayPayload } from './types';
@@ -29,14 +29,20 @@ export async function getBill(tableToken: string): Promise<GuestBill> {
   return structuredClone(bill);
 }
 
+/** Mock guest session: one random ID per page load, since guests don't log in. */
+const guestSessionId = crypto.randomUUID();
+
 /** Holds the picked item fractions for 5 minutes while the guest pays. */
-export async function lockItems(
-  billId: string,
-  lines: PaymentLine[],
-): Promise<{ billId: string; lines: PaymentLine[]; expiresAt: string }> {
+export async function lockItems(billId: string, lines: PaymentLine[]): Promise<ItemLock> {
   await wait(LOAD_DELAY_MS);
   findById(billId);
-  return { billId, lines, expiresAt: new Date(Date.now() + 5 * 60_000).toISOString() };
+  return {
+    id: `lock-${Date.now()}`,
+    billId,
+    guestSessionId,
+    lines,
+    expiresAt: new Date(Date.now() + 5 * 60_000).toISOString(),
+  };
 }
 
 /** Always succeeds after 1 second in mock mode. */

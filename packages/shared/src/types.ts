@@ -86,6 +86,17 @@ export type Item = {
   quantity: number;
   /** Cents paid so far. Fully paid when paidAmount >= unitPrice * quantity. */
   paidAmount: number;
+  /**
+   * Display label for who holds or paid this item, e.g. "another guest".
+   * Filled in by the server per guest on the guest bill; never a session ID.
+   * Unset when nobody holds or has paid any of it.
+   */
+  takenBy?: string;
+  /**
+   * True when the requesting guest holds or paid any part of this item.
+   * Filled in by the server per guest on the guest bill; session IDs are never sent.
+   */
+  isMine?: boolean;
 };
 
 /** Lifecycle of a bill. */

@@ -2,15 +2,36 @@
 
 QR pay-at-table web app for restaurants in London, Ontario. Guests scan a QR code on the table, see the bill, split it or pick their items, tip, and pay with Apple Pay / Google Pay. Servers see "X of Y paid" per table.
 
+Tab. is its own small POS. Servers open tables and add items in the Tab. staff app, and guests pay against bills stored in Tab.'s own database. It does not integrate with Square or any other POS. All bill reads and payment writes go through a middleman layer (`getBill`, `applyPayment`) so a POS adapter (e.g. Toast or Lightspeed) could be added later.
+
 ## Team
 
-- Hassan: front end (apps/web). Hamza: back end (apps/api).
-- Never edit apps/api unless asked. Shared types live in packages/shared.
+- Hassan and Hamza both work on front end (apps/web) and back end (apps/api).
+- Shared types live in packages/shared.
 
 ## Stack
 
 - TypeScript everywhere. React + Vite, Tailwind CSS v4, React Router. npm workspaces.
 - Money is integer cents everywhere. Format only when rendering.
+
+### Back end
+
+- Express + TypeScript in apps/api.
+- PostgreSQL hosted on Neon.
+- Drizzle ORM, with drizzle-kit for migrations.
+- Zod validates every request.
+- Hosting: server on Render, front end on Vercel.
+- Payments: Stripe in test mode.
+- Live updates (Socket.IO or Server-Sent Events): to be decided later.
+
+## Back-end rules
+
+- Money is integer cents.
+- Clients send fractions; the server does all rounding.
+- Validate every request body with Zod.
+- Secrets go in .env (never committed), with a .env.example listing the keys.
+- A payment only counts as succeeded once Stripe's webhook confirms it, never because the client says so.
+- Table QR tokens are random strings, not table numbers.
 
 ## Design source of truth
 

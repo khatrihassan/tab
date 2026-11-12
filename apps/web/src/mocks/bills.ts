@@ -68,6 +68,8 @@ const demo: GuestBill = {
   ...table7,
   id: 'bill-demo',
   status: 'open',
+  splitMode: null,
+  splitShares: null,
   items: table7Items(),
   amountPaid: 0,
 };
@@ -77,6 +79,8 @@ const demoPartial: GuestBill = {
   ...table7,
   id: 'bill-demo-partial',
   status: 'open',
+  splitMode: 'items',
+  splitShares: null,
   items: table7Items().map((item) =>
     item.id === 'item-pasta' ? { ...item, paidAmount: 2200, takenBy: 'Jordan' } : item,
   ),
@@ -88,6 +92,8 @@ const demoPaid: GuestBill = {
   ...table7,
   id: 'bill-demo-paid',
   status: 'paid',
+  splitMode: 'items',
+  splitShares: null,
   items: table7Items().map((item) => ({ ...item, paidAmount: item.unitPrice * item.quantity })),
   amountPaid: 9605,
 };

@@ -91,6 +91,12 @@ export type Item = {
 /** Lifecycle of a bill. */
 export type BillStatus = 'open' | 'paid' | 'closed';
 
+/**
+ * How a bill is being paid, fixed by its first payment: an equal split of the
+ * whole bill, or item fractions. The two can't be mixed on one bill.
+ */
+export type BillSplitMode = 'split' | 'items';
+
 /** A table's bill. */
 export type Bill = {
   /** Unique ID of the bill. */
@@ -107,6 +113,10 @@ export type Bill = {
   openedAt: string;
   /** When the bill was closed, or null while it is still open or paid. */
   closedAt: string | null;
+  /** Equal split or items, set by the first payment. Null until then. */
+  splitMode: BillSplitMode | null;
+  /** Number of shares the bill is split into, e.g. 3. Only set when splitMode is 'split'; null otherwise. */
+  splitShares: number | null;
   /** Restaurant name shown at the top of the bill. */
   restaurantName: string;
   /** Table number, e.g. 7 (rendered as "TABLE 07"). */

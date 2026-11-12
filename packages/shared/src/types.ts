@@ -10,7 +10,67 @@
  * does all rounding, so that a fully paid bill lands exactly on its total.
  * The server must also reject invalid fractions (denominator of 0, or a
  * fraction outside 0 to 1).
+ *
+ * Dates: every date is an ISO 8601 string, since these types travel as JSON.
  */
+
+/** A restaurant using Tab. */
+export type Restaurant = {
+  /** Unique ID of the restaurant. */
+  id: string;
+  /** Name shown to guests, e.g. "Harbour & Elm". */
+  name: string;
+  /** Tax rate in basis points, an integer: 1300 = 13% HST. */
+  taxRateBasisPoints: number;
+};
+
+/** What a staff member can do in the staff app. */
+export type StaffRole = 'server' | 'manager';
+
+/**
+ * A staff member. Has no password field: password hashes live only in the
+ * database and are never sent to clients.
+ */
+export type Staff = {
+  /** Unique ID of the staff member. */
+  id: string;
+  /** ID of the Restaurant they work at. */
+  restaurantId: string;
+  /** Name shown in the staff app, e.g. "Sam". */
+  name: string;
+  /** Server or manager. */
+  role: StaffRole;
+};
+
+/** A dish or drink on a restaurant's menu, which servers add to bills. */
+export type MenuItem = {
+  /** Unique ID of the menu item. */
+  id: string;
+  /** ID of the Restaurant whose menu this is on. */
+  restaurantId: string;
+  /** Name shown to staff and guests, e.g. "Burger". */
+  name: string;
+  /** Price of one unit in cents, before tax. */
+  price: number;
+  /** Menu section, e.g. "Mains" or "Drinks". */
+  category: string;
+  /** Whether servers can currently add it to a bill. */
+  available: boolean;
+};
+
+/** A physical table in a restaurant. */
+export type Table = {
+  /** Unique ID of the table. */
+  id: string;
+  /** ID of the Restaurant the table is in. */
+  restaurantId: string;
+  /** Table number, e.g. 7 (rendered as "TABLE 07"). */
+  tableNumber: number;
+  /** Random string used in the /t/:tableToken URL. Never the table number. */
+  qrToken: string;
+  /** ID of the Bill open at this table, or null when the table is free. */
+  currentBillId: string | null;
+};
 
 /** One line on a bill. */
 export type Item = {
@@ -25,6 +85,9 @@ export type Item = {
   /** Cents paid so far. Fully paid when paidAmount >= unitPrice * quantity. */
   paidAmount: number;
 };
+
+/** Lifecycle of a bill. */
+export type BillStatus = 'open' | 'paid' | 'closed';
 
 /** A table's bill. */
 export type Bill = {
@@ -102,4 +165,36 @@ export type TableStatus = {
   seatsTotal: number;
   /** Cents still to pay on the bill. */
   amountRemaining: number;
+};
+
+/** A guest's rating of their server, left on the Done screen after paying. */
+export type Rating = {
+  /** Unique ID of the rating. */
+  id: string;
+  /** ID of the Bill that was paid. */
+  billId: string;
+  /** ID of the Payment the rating was left after. */
+  paymentId: string;
+  /** ID of the Staff member (the server) being rated. */
+  staffId: string;
+  /** Number of stars, 1 to 5. */
+  stars: 1 | 2 | 3 | 4 | 5;
+  /** Labels of the reason chips the guest picked (from Done.dc.html). */
+  reasons: string[];
+  /** When the rating was left. */
+  createdAt: string;
+};
+
+/** Item fractions held for one guest while they pay, so nobody else can take them. */
+export type ItemLock = {
+  /** Unique ID of the lock. */
+  id: string;
+  /** ID of the Bill the items are on. */
+  billId: string;
+  /** Random ID stored in the guest's browser, since guests don't log in. */
+  guestSessionId: string;
+  /** Item fractions being held. */
+  lines: PaymentLine[];
+  /** When the lock runs out and the items are free again. */
+  expiresAt: string;
 };

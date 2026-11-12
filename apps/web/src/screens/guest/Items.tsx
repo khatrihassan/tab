@@ -56,7 +56,7 @@ export function Items() {
 
         <Card pad="px-3.5" aria-label="Bill items">
           {bill.items.map((item) =>
-            isItemPaid(item) || item.takenBy ? (
+            isItemPaid(item) || isTakenByOther(item) ? (
               <TakenRow key={item.id} item={item} />
             ) : item.quantity > 1 ? (
               <QuantityRow
@@ -102,6 +102,9 @@ export function Items() {
   );
 }
 
+/** Held or paid by someone else: takenBy is set and the item isn't this guest's. */
+const isTakenByOther = (item: Item) => Boolean(item.takenBy) && item.isMine !== true;
+
 /** Paid for, or held by another guest. */
 function TakenRow({ item }: { item: Item }) {
   return (
@@ -111,7 +114,9 @@ function TakenRow({ item }: { item: Item }) {
       </span>
       <span className="flex flex-1 flex-col gap-0.5">
         <span className="text-[15px] font-medium text-muted line-through">{item.name}</span>
-        {item.takenBy && <span className="text-[12px] text-muted">Taken by {item.takenBy}</span>}
+        {isTakenByOther(item) && (
+          <span className="text-[12px] text-muted">Taken by {item.takenBy}</span>
+        )}
       </span>
       <span className="font-mono text-[14px] text-muted">{formatCents(lineTotal(item))}</span>
     </div>

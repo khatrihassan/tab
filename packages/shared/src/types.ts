@@ -76,6 +76,8 @@ export type Table = {
 export type Item = {
   /** Unique ID of this bill line. */
   id: string;
+  /** ID of the MenuItem this line was added from. */
+  menuItemId: string;
   /** Name shown to guests, e.g. "Burger". */
   name: string;
   /** Price of one unit in cents, before tax. */
@@ -93,6 +95,18 @@ export type BillStatus = 'open' | 'paid' | 'closed';
 export type Bill = {
   /** Unique ID of the bill. */
   id: string;
+  /** ID of the Table the bill is open at. */
+  tableId: string;
+  /** ID of the Staff member (the server) looking after the table. */
+  serverId: string;
+  /** Where the bill is in its lifecycle. */
+  status: BillStatus;
+  /** Guests at the table, e.g. 3 in "2 of 3 paid". */
+  partySize: number;
+  /** When the server opened the bill. */
+  openedAt: string;
+  /** When the bill was closed, or null while it is still open or paid. */
+  closedAt: string | null;
   /** Restaurant name shown at the top of the bill. */
   restaurantName: string;
   /** Table number, e.g. 7 (rendered as "TABLE 07"). */

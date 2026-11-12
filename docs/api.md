@@ -65,10 +65,19 @@ Every error, from every request, has the same JSON shape and a matching HTTP sta
 
 Loads the bill for the table whose QR code was scanned.
 
-- **Who:** guest.
+- **Who:** guest. `X-Guest-Session` is optional here; without it, `isMine` is always `false`.
 - **Sends:** nothing. The `qrToken` is in the path.
-- **Returns:** `Bill`. A fully paid bill is still returned (status `'paid'`), so the guest sees "This bill is fully paid".
+- **Returns:** `Bill`, where each item also has:
+  - `takenBy: string | null`: a display label the server works out, for an item that is held or paid (even in part). `null` when nobody holds or has paid any of it.
+  - `isMine: boolean`: `true` when the requesting guest holds or paid any part of the item.
+
+  A fully paid bill is still returned (status `'paid'`), so the guest sees "This bill is fully paid".
+
+- **Privacy:** the response never includes another guest's `guestSessionId`, or any lock or payment IDs that belong to other guests.
+- **Label:** the guest boards have no step where a guest enters a name (the Items board shows "Taken by Jordan", but nothing collects "Jordan"). So `takenBy` is always **"another guest"**. If a name step is added to the boards later, the label becomes that name.
 - **Errors:** `NOT_FOUND` (no table with this token), `TABLE_NOT_OPEN` (the table is free or its bill is closed).
+
+> **Follow-up type change (not part of this spec's PR):** the guest bill items need `takenBy` and `isMine` in `@tab/shared`, e.g. a `GuestItem` type. Today `apps/web` has its own web-only `takenBy`.
 
 ### `POST /bills/:billId/locks`
 
@@ -140,16 +149,27 @@ The server's own tables with "X of Y paid" (S2 · My tables).
 
 - **Who:** staff.
 - **Sends:** nothing.
-- **Returns:** `TableStatus[]`, one per table with an open or paid bill whose `serverId` is the caller.
+- **Returns:** `TableStatus[]`, one per table with an open or paid bill whose `serverId` is the caller. Each includes `tableId`, so the app can link to `/staff/tables/:id`.
+- **Errors:** `UNAUTHENTICATED`.
+
+> **Follow-up type change (not part of this spec's PR):** `TableStatus` needs a `tableId: string` field. Today it only has `tableNumber`.
+
+### `GET /staff/tables/free`
+
+The restaurant's free tables, for the table picker on S3 · Open a table.
+
+- **Who:** staff.
+- **Sends:** nothing.
+- **Returns:** `Table[]`: every table in the caller's restaurant with no open bill (`currentBillId` is null).
 - **Errors:** `UNAUTHENTICATED`.
 
 ### `POST /tables/:tableId/open`
 
-Opens a free table and starts an empty bill (S3 · Open a table).
+Opens a free table, assigns it to the caller, and starts an empty bill (S3 · Open a table).
 
 - **Who:** staff.
 - **Sends:** `{ partySize: number }`, an integer of 1 or more.
-- **Returns:** `{ table: Table, bill: Bill }`. The bill has `status: 'open'`, no items, the caller as `serverId`, and `openedAt` set. The table's `currentBillId` points to it.
+- **Returns:** `{ table: Table, bill: Bill }`. The bill has `status: 'open'`, no items, the caller as `serverId` (so the table now shows in their `GET /staff/tables` and they get its payment alerts), and `openedAt` set. The table's `currentBillId` points to it.
 - **Errors:** `UNAUTHENTICATED`, `VALIDATION_FAILED`, `NOT_FOUND`, `TABLE_ALREADY_OPEN`.
 
 ### `GET /menu`
@@ -175,7 +195,7 @@ One table in detail (S5 · Table detail).
 
 - **Who:** staff.
 - **Sends:** nothing.
-- **Returns:** `{ table: Table, bill: Bill | null, payments: Payment[], locks: ItemLock[] }`. `bill` is null when the table is free. `locks` are the active locks, so the server can see "Held · Jordan · 3:12".
+- **Returns:** `{ table: Table, bill: Bill | null, payments: Payment[], locks: ItemLock[] }`. `bill` is null when the table is free. `locks` are the active locks, so the server can see what is held and for how long (the boards show "Held · Jordan · 3:12"; with no guest name step, the label is "another guest", as on the guest side).
 - **Errors:** `UNAUTHENTICATED`, `NOT_FOUND`.
 
 ### `POST /tables/:tableId/close`
@@ -252,10 +272,5 @@ The server does all rounding, so a fully paid bill lands exactly on its total.
 
 - **Items:** each fraction becomes cents of its line total (`unitPrice × quantity`), plus its share of tax at the restaurant's `taxRateBasisPoints`. The payment that finishes off a line takes exactly what's left of it.
 - **Equal split:** each share is the remaining balance ÷ remaining shares, rounded down; the last share takes whatever is left. For example, $96.05 split 3 ways is $32.01, $32.01, $32.03.
+- **The rule in words:** every share but the last is rounded down to a whole cent, and the last share absorbs any leftover cents. The same goes for items: the payment that finishes off a line absorbs its leftover cents.
 - No payment is ever larger than what's left on the bill.
-
-## Open questions
-
-- **Other guests' locks:** the guest items screen shows "Taken by Jordan", but `Bill` doesn't say which items are held. `GET /tables/:qrToken/bill` will need to return held fractions, without exposing other guests' `guestSessionId`, and a name to show. Where the name comes from isn't decided.
-- **`TableStatus` has no table ID:** S2 needs to open a table's detail page (`/staff/tables/:id`), but `TableStatus` only has `tableNumber`. It will likely need `tableId`.
-- **Free tables for S3:** Open a table lists free tables only, and `GET /staff/tables` returns only the server's own tables. S3 needs a way to list free tables.

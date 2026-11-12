@@ -171,6 +171,8 @@ export type Payment = {
 
 /** Payment progress for one table, as servers see it. */
 export type TableStatus = {
+  /** ID of the Table, used to link to /staff/tables/:id. */
+  tableId: string;
   /** Table number, e.g. 7. */
   tableNumber: number;
   /** Guests who have paid, e.g. 2 in "2 of 3 paid". */

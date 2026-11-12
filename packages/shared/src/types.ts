@@ -86,10 +86,27 @@ export type Item = {
   quantity: number;
   /** Cents paid so far. Fully paid when paidAmount >= unitPrice * quantity. */
   paidAmount: number;
+  /**
+   * Display label for who holds or paid this item, e.g. "another guest".
+   * Filled in by the server per guest on the guest bill; never a session ID.
+   * Unset when nobody holds or has paid any of it.
+   */
+  takenBy?: string;
+  /**
+   * True when the requesting guest holds or paid any part of this item.
+   * Filled in by the server per guest on the guest bill; session IDs are never sent.
+   */
+  isMine?: boolean;
 };
 
 /** Lifecycle of a bill. */
 export type BillStatus = 'open' | 'paid' | 'closed';
+
+/**
+ * How a bill is being paid, fixed by its first payment: an equal split of the
+ * whole bill, or item fractions. The two can't be mixed on one bill.
+ */
+export type BillSplitMode = 'split' | 'items';
 
 /** A table's bill. */
 export type Bill = {
@@ -107,6 +124,10 @@ export type Bill = {
   openedAt: string;
   /** When the bill was closed, or null while it is still open or paid. */
   closedAt: string | null;
+  /** Equal split or items, set by the first payment. Null until then. */
+  splitMode: BillSplitMode | null;
+  /** Number of shares the bill is split into, e.g. 3. Only set when splitMode is 'split'; null otherwise. */
+  splitShares: number | null;
   /** Restaurant name shown at the top of the bill. */
   restaurantName: string;
   /** Table number, e.g. 7 (rendered as "TABLE 07"). */
@@ -171,6 +192,8 @@ export type Payment = {
 
 /** Payment progress for one table, as servers see it. */
 export type TableStatus = {
+  /** ID of the Table, used to link to /staff/tables/:id. */
+  tableId: string;
   /** Table number, e.g. 7. */
   tableNumber: number;
   /** Guests who have paid, e.g. 2 in "2 of 3 paid". */

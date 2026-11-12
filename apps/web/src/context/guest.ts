@@ -1,7 +1,7 @@
-import type { Payment } from '@tab/shared';
+import type { Bill, Payment } from '@tab/shared';
 import { createContext, useContext } from 'react';
 import { quoteItems, quoteSplit, quoteWhole, tipFor, type Quote } from '../lib/billing';
-import type { Fraction, GuestBill, PayMethod, SplitMode } from '../lib/types';
+import type { Fraction, PayMethod, SplitMode } from '../lib/types';
 
 /** 15 / 18 / 20 % from Tip.dc.html, or a custom amount in cents. */
 export type TipPick = number | 'custom';
@@ -21,7 +21,7 @@ export type PaymentRecord = {
 /** The guest's choices across the flow, plus the bill they apply to. */
 export type GuestState = {
   tableToken: string;
-  bill: GuestBill;
+  bill: Bill;
   mode: SplitMode | null;
   /** People splitting the bill equally (2 to 12). */
   people: number;

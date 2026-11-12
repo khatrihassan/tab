@@ -1,3 +1,4 @@
+import type { Bill } from '@tab/shared';
 import { useEffect, useState } from 'react';
 import { Navigate } from 'react-router';
 import { BottomBar } from '../../components/BottomBar';
@@ -11,7 +12,6 @@ import { useGuest, type PaymentRecord } from '../../context/guest';
 import { FRACTION_GLYPH, fractionCents } from '../../lib/billing';
 import { formatCents } from '../../lib/money';
 import { guestPath } from '../../lib/paths';
-import type { GuestBill } from '../../lib/types';
 
 const GOOD_REASONS = ['Friendly', 'Attentive', 'Quick', 'Knew the menu'];
 const BAD_REASONS = ['Slow', 'Hard to flag down', 'Order mix-up', 'Not friendly'];
@@ -144,7 +144,7 @@ function Rating() {
 type ReceiptLine = { key: string; label: string; amount: number };
 
 /** "Burger", "½ Nachos", "House drink ×1"; or one "Split 1 of 3" / "Whole bill" line. */
-function receiptLines(bill: GuestBill, record: PaymentRecord): ReceiptLine[] {
+function receiptLines(bill: Bill, record: PaymentRecord): ReceiptLine[] {
   const { quote, mode } = record;
   if (mode === 'whole') return [{ key: 'whole', label: 'Whole bill', amount: quote.preTax }];
   if (quote.splitShare) {

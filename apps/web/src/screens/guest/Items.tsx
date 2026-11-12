@@ -1,3 +1,4 @@
+import type { Item } from '@tab/shared';
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { BottomBar } from '../../components/BottomBar';
@@ -18,7 +19,7 @@ import {
 } from '../../lib/billing';
 import { formatCents } from '../../lib/money';
 import { guestPath } from '../../lib/paths';
-import type { Fraction, GuestItem } from '../../lib/types';
+import type { Fraction } from '../../lib/types';
 
 const ROW = 'border-b border-divider py-3 last:border-b-0';
 const TILE =
@@ -55,7 +56,7 @@ export function Items() {
 
         <Card pad="px-3.5" aria-label="Bill items">
           {bill.items.map((item) =>
-            isItemPaid(item) || item.takenBy ? (
+            isItemPaid(item) || isTakenByOther(item) ? (
               <TakenRow key={item.id} item={item} />
             ) : item.quantity > 1 ? (
               <QuantityRow
@@ -101,8 +102,11 @@ export function Items() {
   );
 }
 
+/** Held or paid by someone else: takenBy is set and the item isn't this guest's. */
+const isTakenByOther = (item: Item) => Boolean(item.takenBy) && item.isMine !== true;
+
 /** Paid for, or held by another guest. */
-function TakenRow({ item }: { item: GuestItem }) {
+function TakenRow({ item }: { item: Item }) {
   return (
     <div className={`flex items-center gap-3 ${ROW}`}>
       <span className="flex size-11 shrink-0 items-center justify-center rounded-[10px] bg-well">
@@ -110,7 +114,9 @@ function TakenRow({ item }: { item: GuestItem }) {
       </span>
       <span className="flex flex-1 flex-col gap-0.5">
         <span className="text-[15px] font-medium text-muted line-through">{item.name}</span>
-        {item.takenBy && <span className="text-[12px] text-muted">Taken by {item.takenBy}</span>}
+        {isTakenByOther(item) && (
+          <span className="text-[12px] text-muted">Taken by {item.takenBy}</span>
+        )}
       </span>
       <span className="font-mono text-[14px] text-muted">{formatCents(lineTotal(item))}</span>
     </div>
@@ -130,7 +136,7 @@ function FractionRow({
   fraction,
   onChange,
 }: {
-  item: GuestItem;
+  item: Item;
   fraction: Fraction | undefined;
   onChange: (f: Fraction | null) => void;
 }) {
@@ -179,7 +185,7 @@ function QuantityRow({
   count,
   onChange,
 }: {
-  item: GuestItem;
+  item: Item;
   count: number;
   onChange: (count: number) => void;
 }) {

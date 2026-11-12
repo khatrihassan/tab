@@ -1,13 +1,14 @@
+import type { Bill } from '@tab/shared';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 import { Outlet, useParams } from 'react-router';
 import { PhoneScreen } from '../components/PhoneScreen';
 import { getBill } from '../lib/api';
-import type { Fraction, GuestBill, SplitMode } from '../lib/types';
+import type { Fraction, SplitMode } from '../lib/types';
 import { GuestContext, type GuestState, type PaymentRecord, type TipPick } from './guest';
 
 /** Loads the table's bill and holds the guest's choices across screens. */
 function GuestProvider({ tableToken, children }: { tableToken: string; children: ReactNode }) {
-  const [bill, setBill] = useState<GuestBill | null>(null);
+  const [bill, setBill] = useState<Bill | null>(null);
   const [mode, setMode] = useState<SplitMode | null>(null);
   const [people, setPeople] = useState(3);
   const [fractions, setFractions] = useState<Record<string, Fraction>>({});
